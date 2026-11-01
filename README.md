@@ -1,36 +1,44 @@
-# Pac-Man
+# Pac-Man — Unigib Project Demo
 
-Welcome to Pac-Man! This project brings back the nostalgic arcade experience of Pac-Man using HTML, CSS, and vanilla JavaScript. Immerse yourself in the classic gameplay of Pac-Man as you navigate through mazes, collect pellets, and avoid ghosts.
+This repository is a Unigib project demo: a small browser game that shows how a software project can be built and presented for a second-year computer science course. It uses the familiar Pac-Man game to demonstrate how HTML, CSS, and JavaScript work together to create an interactive application.
 
-## Features
+## What the project demonstrates
 
-- **Classic Gameplay**: Enjoy the iconic gameplay of Pac-Man with authentic mechanics and level design.
-- **HTML, CSS, and JavaScript**: Built entirely with HTML, styled with CSS, and powered by vanilla JavaScript for cross-browser compatibility and simplicity.
-- **Responsive Design**: Responsive layout ensures optimal gameplay experience on various screen sizes.
-- **Scoring System**: Keep track of your score as you eat pellets and fruits while avoiding ghosts.
-- **Audio Effects**: Synthesized with the Web Audio API, with sounds for movement, eating pellets, and ghost collisions. Audio starts when you press **Start Game**.
-- **Power Pellets**: Eat a large glowing pellet to frighten ghosts for 30 seconds. Frightened ghosts turn blue and can be eaten for bonus points.
+- Structuring a project into a page, stylesheet, and JavaScript modules.
+- Drawing a game board and game elements with the HTML canvas.
+- Implementing player movement, maze collisions, ghosts, collectibles, and scoring.
+- Responding to keyboard and touch input.
+- Adding visual effects and synthesized sound with the Web Audio API.
 
-## Usage
+## Play the demo
 
-1. Clone the repository:
+No build step or package installation is required. Clone the repository and open `index.html` in a modern web browser:
 
-git clone https://github.com/yourusername/pac-man.git
+```bash
+git clone https://github.com/unigib/pacman-unigib.git
+cd pacman-unigib
+```
 
-2. Navigate into the project directory:
+Then open `index.html`. Select **Start Game** to begin; audio starts after the game is started.
 
-cd pac-man
+### Controls
 
-3. Open the `index.html` file in your web browser.
+- Move with the **arrow keys** or **WASD**.
+- On a touch device, swipe in the direction you want to move.
+- Collect pellets to score points. Power pellets let Pac-Man eat frightened ghosts for bonus points.
 
-## Contributing
+## Project structure
 
-Contributions are welcome! Whether you're reporting a bug, proposing new features, or submitting pull requests, your involvement is appreciated. Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details.
+```text
+index.html          Page markup and game canvas
+styles.css          Page and game presentation
+src/
+  game/game.js      Game setup, drawing, input, and scoring
+  pacman/pacman.js  Pac-Man movement and behavior
+  ghost/ghost.js    Ghost behavior
+assets/             Images, animations, and fonts
+```
 
-## License
+## Presenting the project
 
-This project is licensed under the [MIT License](LICENSE). Feel free to use and modify it as per your requirements.
-
----
-
-*Note: This project is a Pac-Man implementation using HTML, CSS, and JavaScript and is not affiliat
+For a course presentation, you can introduce the goal and technologies, show the project structure, then run the game and explain how input, movement, collisions, scoring, and rendering fit together. The game also provides a practical starting point for discussing testing, accessibility, code organization, and possible extensions.
