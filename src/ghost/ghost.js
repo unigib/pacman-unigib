@@ -48,7 +48,17 @@ class Ghost {
     }
 
     moveProcess() {
-        if (this.isInRange()) {
+        if (isFrightened()) {
+            this.target = randomTargetsForGhosts.reduce((farthest, target) => {
+                let targetDistance =
+                    Math.abs(pacman.getMapX() - target.x / oneBlockSize) +
+                    Math.abs(pacman.getMapY() - target.y / oneBlockSize);
+                let farthestDistance =
+                    Math.abs(pacman.getMapX() - farthest.x / oneBlockSize) +
+                    Math.abs(pacman.getMapY() - farthest.y / oneBlockSize);
+                return targetDistance > farthestDistance ? target : farthest;
+            });
+        } else if (this.isInRange()) {
             this.target = pacman;
         } else {
             this.target = randomTargetsForGhosts[this.randomTargetIndex];
@@ -252,17 +262,45 @@ class Ghost {
 
     draw() {
         canvasContext.save();
-        canvasContext.drawImage(
-            ghostFrames,
-            this.imageX,
-            this.imageY,
-            this.imageWidth,
-            this.imageHeight,
-            this.x,
-            this.y,
-            this.width,
-            this.height
-        );
+        if (isFrightened()) {
+            let shouldFlash = frightenedUntil - Date.now() < 3000;
+            canvasContext.fillStyle =
+                shouldFlash && Math.floor(Date.now() / 200) % 2 === 0
+                    ? "#f5f5f5"
+                    : "#1877ff";
+            canvasContext.beginPath();
+            canvasContext.arc(
+                this.x + this.width / 2,
+                this.y + this.height / 2,
+                this.width / 2,
+                Math.PI,
+                0
+            );
+            canvasContext.lineTo(this.x + this.width, this.y + this.height);
+            canvasContext.lineTo(this.x + this.width * 0.75, this.y + this.height * 0.82);
+            canvasContext.lineTo(this.x + this.width * 0.5, this.y + this.height);
+            canvasContext.lineTo(this.x + this.width * 0.25, this.y + this.height * 0.82);
+            canvasContext.lineTo(this.x, this.y + this.height);
+            canvasContext.closePath();
+            canvasContext.fill();
+            canvasContext.fillStyle = shouldFlash ? "#1877ff" : "#ffffff";
+            canvasContext.beginPath();
+            canvasContext.arc(this.x + this.width * 0.35, this.y + this.height * 0.45, 2, 0, Math.PI * 2);
+            canvasContext.arc(this.x + this.width * 0.65, this.y + this.height * 0.45, 2, 0, Math.PI * 2);
+            canvasContext.fill();
+        } else {
+            canvasContext.drawImage(
+                ghostFrames,
+                this.imageX,
+                this.imageY,
+                this.imageWidth,
+                this.imageHeight,
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            );
+        }
         canvasContext.restore();
         canvasContext.beginPath();
     }

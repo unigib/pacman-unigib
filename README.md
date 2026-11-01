@@ -9,6 +9,7 @@ Welcome to Pac-Man! This project brings back the nostalgic arcade experience of 
 - **Responsive Design**: Responsive layout ensures optimal gameplay experience on various screen sizes.
 - **Scoring System**: Keep track of your score as you eat pellets and fruits while avoiding ghosts.
 - **Audio Effects**: Synthesized with the Web Audio API, with sounds for movement, eating pellets, and ghost collisions. Audio starts when you press **Start Game**.
+- **Power Pellets**: Eat a large glowing pellet to frighten ghosts for 30 seconds. Frightened ghosts turn blue and can be eaten for bonus points.
 
 ## Usage
 

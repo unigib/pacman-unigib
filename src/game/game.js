@@ -34,6 +34,16 @@ let gameStarted = false
 let audioContext = null;
 let lastMovementSoundTime = 0;
 let movementSoundToggle = false;
+const frightenedDuration = 30 * 1000;
+let frightenedUntil = 0;
+
+let isFrightened = () => Date.now() < frightenedUntil;
+
+let activatePowerMode = () => {
+    frightenedUntil = Date.now() + frightenedDuration;
+    playTone(660, 0.12, "square", 0.035, 990);
+    playTone(990, 0.18, "square", 0.035, 1320, 0.12);
+};
 
 let startAudio = () => {
     let AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
@@ -101,9 +111,9 @@ let playCollisionSound = () => {
     playTone(220, 0.18, "sawtooth", 0.035, 110, 0.24);
 };
 
-let map = [
+let pmap = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -123,12 +133,13 @@ let map = [
     [1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
-// Create a copy of the original map to reset the game later
-let originalMap = map.map(row => [...row]);
+let map = pmap;
+let originalMap = pmap.map(row => [...row]);
+
 
 let wrapAtTunnel = entity => {
     if (entity.getMapY() !== TUNNEL_ROW) {
@@ -176,6 +187,7 @@ let restartPacmanAndGhosts = () => {
 
 let onGhostCollision = () => {
     lives--;
+    frightenedUntil = 0;
     playCollisionSound();
     restartPacmanAndGhosts();
     if (lives === 0) {
@@ -200,7 +212,14 @@ let update = () => {
         }
         pacman.eat();
         updateGhosts();
-        if (pacman.checkGhostCollision(ghosts)) {
+        let collidingGhosts = ghosts.filter(ghost =>
+            ghost.getMapX() === pacman.getMapX() &&
+            ghost.getMapY() === pacman.getMapY() &&
+            (!ghost.eatenAt || Date.now() - ghost.eatenAt >= 1000)
+        );
+        if (isFrightened()) {
+            collidingGhosts.forEach(eatGhost);
+        } else if (collidingGhosts.length > 0) {
             onGhostCollision();
         }
     }
@@ -217,6 +236,20 @@ let drawFoods = () => {
                     oneBlockSize / 3,
                     "#FEB897"
                 );
+            } else if (map[i][j] === 4) {
+                canvasContext.beginPath();
+                canvasContext.arc(
+                    j * oneBlockSize + oneBlockSize / 2,
+                    i * oneBlockSize + oneBlockSize / 2,
+                    oneBlockSize / 3,
+                    0,
+                    Math.PI * 2
+                );
+                canvasContext.fillStyle = "#FFF4A3";
+                canvasContext.shadowColor = "#FFE066";
+                canvasContext.shadowBlur = 8;
+                canvasContext.fill();
+                canvasContext.shadowBlur = 0;
             }
         }
     }
@@ -225,7 +258,7 @@ let drawFoods = () => {
 let drawRemainingLives = () => {
     canvasContext.font = "15px Emulogic";
     canvasContext.fillStyle = "white";
-    canvasContext.fillText("Lives: ", 240, oneBlockSize * (map.length + 1) + 15);
+    canvasContext.fillText("Lives: ", 270, oneBlockSize * (map.length + 1) + 15);
 
     for (let i = 0; i < lives; i++) {
         canvasContext.drawImage(
@@ -234,7 +267,7 @@ let drawRemainingLives = () => {
             0,
             oneBlockSize,
             oneBlockSize,
-            340 + i * oneBlockSize,
+            360 + i * oneBlockSize,
             oneBlockSize * map.length + 20,
             oneBlockSize,
             oneBlockSize
@@ -252,6 +285,17 @@ let drawScore = () => {
     );
 };
 
+let drawPowerTimer = () => {
+    if (!isFrightened()) {
+        return;
+    }
+
+    let secondsRemaining = Math.ceil((frightenedUntil - Date.now()) / 1000);
+    canvasContext.font = "9px Emulogic";
+    canvasContext.fillStyle = "#FFF4A3";
+    canvasContext.fillText(`POWER ${secondsRemaining}s`, 175, oneBlockSize * (map.length + 1) + 15);
+};
+
 let draw = () => {
     if (gameStarted) {
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
@@ -262,6 +306,7 @@ let draw = () => {
         pacman.draw();
         drawScore();
         drawRemainingLives();
+        drawPowerTimer();
     }
 };
 
@@ -339,6 +384,15 @@ let createGhosts = () => {
     }
 };
 
+let eatGhost = ghost => {
+    score += 100;
+    playTone(880, 0.12, "square", 0.035, 1320);
+    let ghostIndex = ghosts.indexOf(ghost);
+    ghost.x = (9 + ghostIndex % 2) * oneBlockSize;
+    ghost.y = (10 + Math.floor(ghostIndex / 2) % 2) * oneBlockSize;
+    ghost.eatenAt = Date.now();
+};
+
 let startGame = () => {
     startAudio();
     gameStarted = true;
@@ -352,6 +406,7 @@ let restartGame = () => {
     score = 0;
     lives = 3;
     gameStarted = false;
+    frightenedUntil = 0;
     map = originalMap.map(row => [...row]);
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 };
