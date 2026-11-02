@@ -1,3 +1,9 @@
+/*
+
+This is the main Pacman class with all the logic for moving, eating, and drawing Pacman on the canvas. It also handles collision detection with walls and ghosts, as well as changing direction based on user input.
+
+*/
+
 class Pacman {
     constructor(x, y, width, height, speed) {
         this.x = x;

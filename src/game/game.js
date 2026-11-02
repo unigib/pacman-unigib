@@ -14,6 +14,8 @@ const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
 const TUNNEL_ROW = 8;
+const PACMAN_START_X = 1;
+const PACMAN_START_Y = 1;
 let lives = 3;
 let ghostCount = 4;
 let ghostImageLocations = [
@@ -117,7 +119,7 @@ let pmap = [
     [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
@@ -166,8 +168,8 @@ let randomTargetsForGhosts = [
 
 let createNewPacman = () => {
     pacman = new Pacman(
-        oneBlockSize,
-        oneBlockSize,
+        PACMAN_START_X * oneBlockSize,
+        PACMAN_START_Y * oneBlockSize,
         oneBlockSize,
         oneBlockSize,
         oneBlockSize / 5
@@ -179,6 +181,7 @@ let gameLoop = () => {
     draw();
 };
 
+// Start the game loop
 let gameInterval = setInterval(gameLoop, 1000 / fps);
 
 let restartPacmanAndGhosts = () => {
