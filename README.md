@@ -21,6 +21,8 @@ cd pacman-unigib
 
 Then open `index.html`. Select **Start Game** to begin; audio starts after the game is started.
 
+The Git version is generated when launching the project with **F5** in VS Code. AWS Amplify generates it during its build using `amplify.yml`; connect the repository to Amplify and deploy the repository root as the site.
+
 ### Controls
 
 - Move with the **arrow keys** or **WASD**.

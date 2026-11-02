@@ -7,7 +7,7 @@ const version = execFileSync("git", ["describe", "--tags", "--always"], {
     cwd: workspaceFolder,
     encoding: "utf8",
 }).trim();
-const outputPath = path.join(workspaceFolder, ".vscode", "game-version.js");
+const outputPath = path.join(workspaceFolder, "game-version.js");
 
 fs.writeFileSync(
     outputPath,
