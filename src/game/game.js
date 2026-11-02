@@ -1,3 +1,4 @@
+
 const canvas = document.getElementById("canvas");
 const canvasContext = canvas.getContext("2d");
 const pacmanFrames = document.getElementById("animation");
@@ -471,7 +472,7 @@ function handleTouchMove(event) {
     startX = null;
     startY = null;
 }
-
+// Set Pacman's next direction based on the key code
 function setPacmanDirection(keyCode) {
     setTimeout(() => {
         if (keyCode === 37 || keyCode === 65) {

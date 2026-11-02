@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Generate Git version",
+            "type": "process",
+            "command": "node",
+            "args": [
+                "${workspaceFolder}/scripts/generate-version.js"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

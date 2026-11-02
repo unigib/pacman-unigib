@@ -13,7 +13,7 @@ body {
     background-color: black;
     flex-direction: column;
     display: flex;
-    width: 400px;   
+    width: 600px;   
     gap: 20px;   
     justify-content: center;
     align-items: center;

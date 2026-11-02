@@ -6,7 +6,8 @@
             "type": "pwa-msedge",
             "request": "launch",
             "url": "file://${workspaceFolder}/index.html",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "Generate Git version"
         }
     ]
 }
